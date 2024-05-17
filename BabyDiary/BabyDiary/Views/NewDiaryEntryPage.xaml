@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BabyDiary.Views.NewDiaryEntryPage" Title="New Diary Entry">
+    <ContentPage.Content>
+        <StackLayout>
+            <Grid MinimumHeightRequest="50">
+                <Button x:Name="ButtonTypeDrink" Grid.Column="0" Grid.Row="0" Text="Drink" IsEnabled="false" Clicked="ButtonTypeDrink_Clicked"/>
+                <Button x:Name="ButtonTypeDiapers" Grid.Column="1" Grid.Row="0" Text="Diapers" IsEnabled="true" Clicked="ButtonTypeDiapers_Clicked"/>
+                <Button x:Name="ButtonTypeSleep" Grid.Column="2" Grid.Row="0" Text="Sleep" IsEnabled="true" Clicked="ButtonTypeSleep_Clicked"/>
+            </Grid>
+            <Image x:Name="entryIcon" Source="babyflasche.png" HeightRequest="100"/>
+            <Grid x:Name="drinkGrid" IsVisible="true" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+                
+                <Label x:Name="lDrinkAmount" Text="Amount:" Grid.Column="0" Grid.Row="0" VerticalOptions="Center"/>
+                <Picker x:Name="drinkAmount" Grid.Column="1" Grid.Row="0" VerticalOptions="Center"
+                        SelectedIndex="4">
+                    <Picker.Items>
+                        <x:String>50 ml</x:String>
+                        <x:String>100 ml</x:String>
+                        <x:String>120 ml</x:String>
+                        <x:String>150 ml</x:String>
+                        <x:String>180 ml</x:String>
+                    </Picker.Items>
+                </Picker>
+                
+            </Grid>
+            <Grid x:Name="diapersGrid" IsVisible="true" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+                <Label x:Name="lPoopMode" Text="Poop:" Grid.Column="0" Grid.Row="0" VerticalOptions="Center"/>
+                <Picker x:Name="poopMode" Grid.Column="1" Grid.Row="0" VerticalOptions="Center" SelectedIndex="0">
+                    <Picker.Items>
+                        <x:String>No</x:String>
+                        <x:String>Yellow</x:String>
+                        <x:String>Green</x:String>
+                        <x:String>Brown</x:String>
+                        <x:String>Black</x:String>
+                    </Picker.Items>
+                </Picker>
+
+            </Grid>
+            <Grid x:Name="sleepGrid" IsVisible="false" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+                <Label x:Name="lSleep" Text="End Time:" Grid.Column="0" Grid.Row="0" VerticalOptions="Center"/>
+                <Picker x:Name="SleepAmount" Grid.Column="1" Grid.Row="0" VerticalOptions="Center" SelectedIndex="0">
+                    <Picker.Items>
+                        <x:String>10 Minutes</x:String>
+                        <x:String>20 Minutes</x:String>
+                        <x:String>30 Minutes</x:String>
+                        <x:String>40 Minutes</x:String>
+                        <x:String>50 Minutes</x:String>
+                        <x:String>1 Hour</x:String>
+                    </Picker.Items>
+                </Picker>
+
+            </Grid>
+            <Grid>
+                <Label Text="Time:" Grid.Row="0" Grid.Column="0"/>
+                <TimePicker x:Name="newEntryTime" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1"
+                            Format="HH:mm"/>
+            </Grid>
+            <Grid>
+                <Label Text="Additonals:" Grid.Row="0" Grid.Column="0"/>
+                <Editor x:Name="specialText" Placeholder="Type some notes here..." Grid.Row="0" Grid.Column="1"
+                    MinimumHeightRequest="100" HeightRequest="100" />
+            </Grid>
+            
+            <Button x:Name="newEntryAddButton" Text="Add" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                    Clicked="newEntryAddButton_Clicked"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
