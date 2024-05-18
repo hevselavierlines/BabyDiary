@@ -51,6 +51,7 @@ namespace BabyDiary.Views
                 changeType(Type.SLEEP);
             }
             newEntryAddButton.Text = "Save";
+            Title = "Edit Diary Entry";
         }
 
         private void changeType(Type type)

@@ -4,6 +4,7 @@
              x:Class="BabyDiary.Views.DiaryPage"
              Title="Diary Entries">
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Edit" Clicked="ToolbarItemEdit_Clicked"/>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
@@ -28,7 +29,7 @@
                         HorizontalOptions="FillAndExpand"
                         />
             </Grid>
-            <CollectionView x:Name="entriesCV">
+            <CollectionView x:Name="entriesCV" ChildAdded="entriesCV_ChildAdded" ChildRemoved="entriesCV_ChildRemoved">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <SwipeView x:Name="SwipeViewRef">

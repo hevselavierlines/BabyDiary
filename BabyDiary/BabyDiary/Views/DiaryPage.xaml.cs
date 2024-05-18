@@ -15,10 +15,11 @@ namespace BabyDiary.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DiaryPage : ContentPage
     {
+        private List<SwipeView> _swipeViews;
         public DiaryPage()
         {
             InitializeComponent();
-            
+            _swipeViews = new List<SwipeView>();
         }
         
         void LoadDiaryEntries(DateTime dateTime)
@@ -82,6 +83,32 @@ namespace BabyDiary.Views
             SwipeItem item = sender as SwipeItem;
             var entry = item.BindingContext as DiaryEntry;
             Navigation.PushAsync(new NewDiaryEntryPage(entryDate.Date, entry));
+        }
+
+        private void entriesCV_ChildAdded(object sender, ElementEventArgs e)
+        {
+            SwipeView sw = e.Element.FindByName("SwipeViewRef") as SwipeView;
+            if(sw != null)
+            {
+                _swipeViews.Add(sw);
+            }
+        }
+
+        private void entriesCV_ChildRemoved(object sender, ElementEventArgs e)
+        {
+            SwipeView sw = e.Element.FindByName("SwipeViewRef") as SwipeView;
+            if (sw != null)
+            {
+                _swipeViews.Remove(sw);
+            }
+        }
+
+        private void ToolbarItemEdit_Clicked(object sender, EventArgs e)
+        {
+            foreach (var item in _swipeViews)
+            {
+                item.Open(OpenSwipeItem.LeftItems);
+            }
         }
     }
 }
