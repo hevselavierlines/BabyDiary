@@ -36,13 +36,13 @@ namespace BabyDiary.Views
             InitializeComponent();
             mEntry = entry;
             mDay = day;
-            specialText.Text = mEntry.specialInfo;
-            newEntryTime.Time = new TimeSpan(mEntry.entryTime.Hour, mEntry.entryTime.Minute, 0);
-            if (mEntry.type.Equals("drink")) {
+            specialText.Text = mEntry.SpecialInfo;
+            newEntryTime.Time = new TimeSpan(mEntry.EntryTime.Hour, mEntry.EntryTime.Minute, 0);
+            if (mEntry.Type == DiaryEntry.TYPE.DRINK) {
                 changeType(Type.DRINK);
                 DrinkAmount.Text = mEntry.DrinkAmount.ToString();
             }
-            else if(mEntry.type.Equals("diapers"))
+            else if(mEntry.Type == DiaryEntry.TYPE.DIAPERS)
             {
                 changeType(Type.DIAPERS);
                 poopMode.SelectedItem = mEntry.PoopInfo;
@@ -50,7 +50,7 @@ namespace BabyDiary.Views
             else
             {
                 changeType(Type.SLEEP);
-                SleepAmount.Text = mEntry.sleepTime.ToString();
+                SleepAmount.Text = mEntry.SleepTime.ToString();
             }
             newEntryAddButton.Text = "Save";
             Title = "Edit Diary Entry";
@@ -116,26 +116,26 @@ namespace BabyDiary.Views
             {
                 entry = mEntry;
             }
-            entry.specialInfo = specialText.Text;
+            entry.SpecialInfo = specialText.Text;
             switch (mType)
             {
                 case Type.DRINK:
-                    entry.type = "drink";
+                    entry.Type = DiaryEntry.TYPE.DRINK;
                     entry.DrinkAmount = int.Parse(DrinkAmount.Text);
                     break;
                 case Type.DIAPERS:
-                    entry.type = "diapers";
+                    entry.Type = DiaryEntry.TYPE.DIAPERS;
                     entry.PoopInfo = poopMode.SelectedItem + "";
                     break;
                 case Type.SLEEP:
-                    entry.type = "sleep";
-                    entry.sleepTime = int.Parse(SleepAmount.Text);
+                    entry.Type = DiaryEntry.TYPE.SLEEP;
+                    entry.SleepTime = int.Parse(SleepAmount.Text);
                     break;
             } 
             DateTime dateTime = mDay;
             dateTime = dateTime.AddHours(newEntryTime.Time.Hours);
             dateTime = dateTime.AddMinutes(newEntryTime.Time.Minutes);
-            entry.entryTime = dateTime;
+            entry.EntryTime = dateTime;
             using (SQLiteConnection connection = new SQLiteConnection(App.DBFolder))
             {
 

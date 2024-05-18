@@ -33,8 +33,8 @@ namespace BabyDiary.Views
                 var maximum = dateTime.AddHours(23).AddMinutes(59).AddSeconds(59);
                 _entries = new ObservableCollection<DiaryEntry>(connection
                     .Table<DiaryEntry>()
-                    .Where(entry => entry.entryTime >= minimum && entry.entryTime <= maximum)
-                    .OrderBy(entry => entry.entryTime).ToList());
+                    .Where(entry => entry.EntryTime >= minimum && entry.EntryTime <= maximum)
+                    .OrderBy(entry => entry.EntryTime).ToList());
                 entriesCV.ItemsSource = _entries;
             }
         }

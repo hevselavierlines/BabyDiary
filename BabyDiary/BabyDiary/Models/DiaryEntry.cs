@@ -9,19 +9,23 @@ namespace BabyDiary.Models
 {
     public class DiaryEntry
     {
+        public enum TYPE
+        {
+            DRINK, DIAPERS, SLEEP
+        }
         [PrimaryKey, AutoIncrement]
-        public long sid { get; set; }
+        public long Sid { get; set; }
         public int DrinkAmount { get; set; }
         public string PoopInfo { get; set; }
-        public string type { get; set; }
-        public string specialInfo { get; set; }
-        public DateTime entryTime { get; set; }
-        public int sleepTime { get; set; }
-        public string dayString
+        public TYPE Type { get; set; }
+        public string SpecialInfo { get; set; }
+        public DateTime EntryTime { get; set; }
+        public int SleepTime { get; set; }
+        public string DayString
         {
             get
             {
-                return entryTime.Day + "-" + entryTime.Month + "-" + entryTime.Year;
+                return EntryTime.Day + "-" + EntryTime.Month + "-" + EntryTime.Year;
             }
         }
         public string Icon
@@ -29,11 +33,11 @@ namespace BabyDiary.Models
             get
             {
                 {
-                    if (type.Equals("drink"))
+                    if (Type == TYPE.DRINK)
                     {
                         return "babyflasche.png";
                     }
-                    else if(type.Equals("diapers"))
+                    else if(Type == TYPE.DIAPERS)
                     {
                         return "windel.png";
                     } else
@@ -46,15 +50,16 @@ namespace BabyDiary.Models
 
         public string StatusText { get
             {
-                if (type.Equals("sleep"))
-                {
-                    return sleepTime + " Minutes";
-                } else if(type.Equals("drink"))
-                {
-                    return DrinkAmount + " ml";
-                } else
-                {
-                    return PoopInfo;
+                switch(Type)
+                { 
+                    case TYPE.DRINK:
+                        return DrinkAmount + " ml";
+                    case TYPE.DIAPERS:
+                        return PoopInfo;
+                    case TYPE.SLEEP:
+                        return SleepTime + " Minutes";
+                    default:
+                        return string.Empty;
                 }
             } 
         }
