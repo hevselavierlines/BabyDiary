@@ -10,22 +10,14 @@
                 <Button x:Name="ButtonTypeSleep" Grid.Column="2" Grid.Row="0" Text="Sleep" IsEnabled="true" Clicked="ButtonTypeSleep_Clicked"/>
             </Grid>
             <Image x:Name="entryIcon" Source="babyflasche.png" HeightRequest="100"/>
-            <Grid x:Name="drinkGrid" IsVisible="true" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid x:Name="drinkGrid" IsVisible="true" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" ColumnDefinitions="100,*,20">
                 
                 <Label x:Name="lDrinkAmount" Text="Amount:" Grid.Column="0" Grid.Row="0" VerticalOptions="Center"/>
-                <Picker x:Name="drinkAmount" Grid.Column="1" Grid.Row="0" VerticalOptions="Center"
-                        SelectedIndex="4">
-                    <Picker.Items>
-                        <x:String>50 ml</x:String>
-                        <x:String>100 ml</x:String>
-                        <x:String>120 ml</x:String>
-                        <x:String>150 ml</x:String>
-                        <x:String>180 ml</x:String>
-                    </Picker.Items>
-                </Picker>
-                
+                <Entry x:Name="DrinkAmount" Placeholder="Drink amount in ml" Grid.Column="1" Grid.Row="0" Keyboard="Numeric"/>
+
+                <Label x:Name="lDrinkAmount2" Text="ml" Grid.Column="2" Grid.Row="0" VerticalOptions="Center"/>
             </Grid>
-            <Grid x:Name="diapersGrid" IsVisible="true" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid x:Name="diapersGrid" IsVisible="true" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" ColumnDefinitions="100,*">
                 <Label x:Name="lPoopMode" Text="Poop:" Grid.Column="0" Grid.Row="0" VerticalOptions="Center"/>
                 <Picker x:Name="poopMode" Grid.Column="1" Grid.Row="0" VerticalOptions="Center" SelectedIndex="0">
                     <Picker.Items>
@@ -38,28 +30,18 @@
                 </Picker>
 
             </Grid>
-            <Grid x:Name="sleepGrid" IsVisible="false" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
-                <Label x:Name="lSleep" Text="End Time:" Grid.Column="0" Grid.Row="0" VerticalOptions="Center"/>
-                <Picker x:Name="SleepAmount" Grid.Column="1" Grid.Row="0" VerticalOptions="Center" SelectedIndex="0">
-                    <Picker.Items>
-                        <x:String>10 Minutes</x:String>
-                        <x:String>20 Minutes</x:String>
-                        <x:String>30 Minutes</x:String>
-                        <x:String>40 Minutes</x:String>
-                        <x:String>50 Minutes</x:String>
-                        <x:String>1 Hour</x:String>
-                    </Picker.Items>
-                </Picker>
-
+            <Grid x:Name="sleepGrid" IsVisible="false" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" ColumnDefinitions="100,*, 30">
+                <Label x:Name="lSleep" Text="Minutes:" Grid.Column="0" Grid.Row="0" VerticalOptions="Center"/>
+                <Entry x:Name="SleepAmount" Grid.Column="1" Grid.Row="0" VerticalOptions="Center" Keyboard="Numeric">
+                </Entry>
+                <Label x:Name="lSleep2" Text="min" Grid.Column="2" Grid.Row="0" VerticalOptions="CenterAndExpand"/>
             </Grid>
-            <Grid>
+            <Grid ColumnDefinitions="100,*" RowDefinitions="Auto,Auto">
                 <Label Text="Time:" Grid.Row="0" Grid.Column="0"/>
                 <TimePicker x:Name="newEntryTime" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1"
                             Format="HH:mm"/>
-            </Grid>
-            <Grid>
-                <Label Text="Additonals:" Grid.Row="0" Grid.Column="0"/>
-                <Editor x:Name="specialText" Placeholder="Type some notes here..." Grid.Row="0" Grid.Column="1"
+                <Label Text="Additonals:" Grid.Row="1" Grid.Column="0"/>
+                <Editor x:Name="specialText" Placeholder="Type some notes here..." Grid.Row="1" Grid.Column="1"
                     MinimumHeightRequest="100" HeightRequest="100" />
             </Grid>
             

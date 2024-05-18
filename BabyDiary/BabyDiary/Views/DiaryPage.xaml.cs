@@ -2,6 +2,7 @@
 using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace BabyDiary.Views
     public partial class DiaryPage : ContentPage
     {
         private List<SwipeView> _swipeViews;
+        private ObservableCollection<DiaryEntry> _entries;
         public DiaryPage()
         {
             InitializeComponent();
@@ -29,11 +31,11 @@ namespace BabyDiary.Views
                 connection.CreateTable<DiaryEntry>();
                 var minimum = dateTime;
                 var maximum = dateTime.AddHours(23).AddMinutes(59).AddSeconds(59);
-                var entries = connection
+                _entries = new ObservableCollection<DiaryEntry>(connection
                     .Table<DiaryEntry>()
                     .Where(entry => entry.entryTime >= minimum && entry.entryTime <= maximum)
-                    .OrderBy(entry => entry.entryTime).ToList();
-                entriesCV.ItemsSource = entries;
+                    .OrderBy(entry => entry.entryTime).ToList());
+                entriesCV.ItemsSource = _entries;
             }
         }
 
@@ -75,7 +77,7 @@ namespace BabyDiary.Views
                 connection.CreateTable<DiaryEntry>();
                 connection.Delete(entry);
             }
-            LoadDiaryEntries(entryDate.Date);
+            _entries.Remove(entry);
         }
 
         private void SwipeItem_Edit(object sender, EventArgs e)

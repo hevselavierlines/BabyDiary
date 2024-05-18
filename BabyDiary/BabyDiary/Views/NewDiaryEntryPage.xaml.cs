@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BabyDiary.Views
 {
@@ -26,7 +27,7 @@ namespace BabyDiary.Views
             newEntryTime.Time = DateTime.Now.TimeOfDay;
             changeType(Type.DRINK);
             poopMode.SelectedIndex = 0;
-            drinkAmount.SelectedIndex = 4;
+            DrinkAmount.Text = "180";
             mDay = day;
         }
 
@@ -39,16 +40,17 @@ namespace BabyDiary.Views
             newEntryTime.Time = new TimeSpan(mEntry.entryTime.Hour, mEntry.entryTime.Minute, 0);
             if (mEntry.type.Equals("drink")) {
                 changeType(Type.DRINK);
-                drinkAmount.SelectedItem = mEntry.text;
+                DrinkAmount.Text = mEntry.DrinkAmount.ToString();
             }
             else if(mEntry.type.Equals("diapers"))
             {
                 changeType(Type.DIAPERS);
-                poopMode.SelectedItem = mEntry.text;
+                poopMode.SelectedItem = mEntry.PoopInfo;
             }
             else
             {
                 changeType(Type.SLEEP);
+                SleepAmount.Text = mEntry.sleepTime.ToString();
             }
             newEntryAddButton.Text = "Save";
             Title = "Edit Diary Entry";
@@ -56,6 +58,7 @@ namespace BabyDiary.Views
 
         private void changeType(Type type)
         {
+            mType = type;
             if(type == Type.DRINK) 
             {
                 ButtonTypeDrink.IsEnabled = false;
@@ -84,7 +87,7 @@ namespace BabyDiary.Views
                 drinkGrid.IsVisible = false;
                 diapersGrid.IsVisible = false;
                 sleepGrid.IsVisible = true;
-                entryIcon.Source = "none";
+                entryIcon.Source = "babyschlaf.png";
             }
         }
 
@@ -106,20 +109,29 @@ namespace BabyDiary.Views
         private void newEntryAddButton_Clicked(object sender, EventArgs e)
         {
             DiaryEntry entry;
-            if (mEntry == null) { 
-                entry = new DiaryEntry() {
-                    specialInfo = specialText.Text,
-                    type = !ButtonTypeDrink.IsEnabled ? "drink" : "diapers",
-                    text = !ButtonTypeDrink.IsEnabled ? drinkAmount.SelectedItem.ToString() : poopMode.SelectedItem.ToString()
-                };
+            if (mEntry == null) {
+                entry = new DiaryEntry();
             } 
             else
             {
                 entry = mEntry;
-                entry.specialInfo = specialText.Text;
-                entry.type = !ButtonTypeDrink.IsEnabled ? "drink" : "diapers";
-                entry.text = !ButtonTypeDrink.IsEnabled ? drinkAmount.SelectedItem.ToString() : poopMode.SelectedItem.ToString();
             }
+            entry.specialInfo = specialText.Text;
+            switch (mType)
+            {
+                case Type.DRINK:
+                    entry.type = "drink";
+                    entry.DrinkAmount = int.Parse(DrinkAmount.Text);
+                    break;
+                case Type.DIAPERS:
+                    entry.type = "diapers";
+                    entry.PoopInfo = poopMode.SelectedItem + "";
+                    break;
+                case Type.SLEEP:
+                    entry.type = "sleep";
+                    entry.sleepTime = int.Parse(SleepAmount.Text);
+                    break;
+            } 
             DateTime dateTime = mDay;
             dateTime = dateTime.AddHours(newEntryTime.Time.Hours);
             dateTime = dateTime.AddMinutes(newEntryTime.Time.Minutes);

@@ -11,10 +11,12 @@ namespace BabyDiary.Models
     {
         [PrimaryKey, AutoIncrement]
         public long sid { get; set; }
-        public string text { get; set; }
+        public int DrinkAmount { get; set; }
+        public string PoopInfo { get; set; }
         public string type { get; set; }
         public string specialInfo { get; set; }
         public DateTime entryTime { get; set; }
+        public int sleepTime { get; set; }
         public string dayString
         {
             get
@@ -31,12 +33,30 @@ namespace BabyDiary.Models
                     {
                         return "babyflasche.png";
                     }
-                    else
+                    else if(type.Equals("diapers"))
                     {
                         return "windel.png";
+                    } else
+                    {
+                        return "babyschlaf.png";
                     }
                 }
             }
+        }
+
+        public string StatusText { get
+            {
+                if (type.Equals("sleep"))
+                {
+                    return sleepTime + " Minutes";
+                } else if(type.Equals("drink"))
+                {
+                    return DrinkAmount + " ml";
+                } else
+                {
+                    return PoopInfo;
+                }
+            } 
         }
     }
 }
