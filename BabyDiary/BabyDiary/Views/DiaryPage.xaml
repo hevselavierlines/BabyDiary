@@ -29,50 +29,51 @@
                         HorizontalOptions="FillAndExpand"
                         />
             </Grid>
-            <CollectionView x:Name="entriesCV" ChildAdded="entriesCV_ChildAdded" ChildRemoved="entriesCV_ChildRemoved">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <SwipeView x:Name="SwipeViewRef">
-                            <SwipeView.LeftItems>
-                                <SwipeItems Mode="Reveal">
-                                    <SwipeItem Text="Edit"
-                                               BackgroundColor="Green"
-                                               Invoked="SwipeItem_Edit"/>
-                                    <SwipeItem Text="Delete" 
-                                           BackgroundColor="Red"
-                                               Invoked="SwipeItem_Invoked"/>
-                                </SwipeItems>
-                            </SwipeView.LeftItems>
-                            <Grid Padding="10"
-                          RowDefinitions="Auto, *"
-                          ColumnDefinitions="Auto, *, Auto">
-                                <Image Grid.RowSpan="2"
-                               Source="{Binding Icon}"
-                               Aspect="AspectFit"
-                               HeightRequest="80"
-                               WidthRequest="80" />
-                                <Label Grid.Column="2"
-                                    Grid.Row="0"
-                               Text="{Binding EntryTime, StringFormat='{}{0:HH\\:mm}'}"
-                               FontAttributes="Bold" 
-                                   HorizontalOptions="End"/>
-                                <Label Grid.Row="1"
-                                Grid.Column="2"
-                                Text="{Binding StatusText}"
-                                VerticalOptions="End"
-                                   HorizontalOptions="End"/>
-                                <Label Grid.Row="0" Grid.Column="1"
-                                   Text="{Binding SpecialInfo}" HeightRequest="50"/>
-                            </Grid>
-                        </SwipeView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-                <CollectionView.Footer>
-                    <Button Text="Add" x:Name="addButton"
-                            Clicked="addButton_Clicked"/>
-                </CollectionView.Footer>
-            </CollectionView>
-            
+            <RefreshView x:Name="entriesRefresh" Refreshing="entriesRefresh_Refreshing">
+                <CollectionView x:Name="entriesCV" ChildAdded="entriesCV_ChildAdded" ChildRemoved="entriesCV_ChildRemoved">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView x:Name="SwipeViewRef">
+                                <SwipeView.LeftItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItem Text="Edit"
+                                                   BackgroundColor="Green"
+                                                   Invoked="SwipeItem_Edit"/>
+                                        <SwipeItem Text="Delete" 
+                                               BackgroundColor="Red"
+                                                   Invoked="SwipeItem_Invoked"/>
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <Grid Padding="10"
+                              RowDefinitions="Auto, *"
+                              ColumnDefinitions="Auto, *, Auto">
+                                    <Image Grid.RowSpan="2"
+                                   Source="{Binding Icon}"
+                                   Aspect="AspectFit"
+                                   HeightRequest="80"
+                                   WidthRequest="80" />
+                                    <Label Grid.Column="2"
+                                        Grid.Row="0"
+                                   Text="{Binding EntryTime, StringFormat='{}{0:HH\\:mm}'}"
+                                   FontAttributes="Bold" 
+                                       HorizontalOptions="End"/>
+                                    <Label Grid.Row="1"
+                                    Grid.Column="2"
+                                    Text="{Binding StatusText}"
+                                    VerticalOptions="End"
+                                       HorizontalOptions="End"/>
+                                    <Label Grid.Row="0" Grid.Column="1"
+                                       Text="{Binding SpecialInfo}" HeightRequest="50"/>
+                                </Grid>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.Footer>
+                        <Button Text="Add" x:Name="addButton"
+                                Clicked="addButton_Clicked"/>
+                    </CollectionView.Footer>
+                </CollectionView>
+            </RefreshView>
             
         </StackLayout>
     </ContentPage.Content>

@@ -1,4 +1,5 @@
 ﻿using BabyDiary.Models;
+using Firebase.Database.Query;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -106,7 +107,7 @@ namespace BabyDiary.Views
             changeType(Type.SLEEP);
         }
 
-        private void newEntryAddButton_Clicked(object sender, EventArgs e)
+        private async void newEntryAddButton_Clicked(object sender, EventArgs e)
         {
             DiaryEntry entry;
             if (mEntry == null) {
@@ -136,6 +137,7 @@ namespace BabyDiary.Views
             dateTime = dateTime.AddHours(newEntryTime.Time.Hours);
             dateTime = dateTime.AddMinutes(newEntryTime.Time.Minutes);
             entry.EntryTime = dateTime;
+            entry.UpdateTime = DateTime.Now;
             using (SQLiteConnection connection = new SQLiteConnection(App.DBFolder))
             {
 
@@ -143,12 +145,47 @@ namespace BabyDiary.Views
                 if (mEntry == null)
                 {
                     connection.Insert(entry);
+                    await postToDatabase(entry);
                 } else
                 {
                     connection.Update(entry);
+                    await updateToDatabase(entry);
                 }
             }
-            Navigation.PopAsync();
+            await Navigation.PopAsync();
+        }
+
+        private async Task<bool> postToDatabase(DiaryEntry diaryEntry)
+        {
+            try
+            {
+                var firebaseClient = ((App)Xamarin.Forms.Application.Current).fireBaseClientObj;
+                await firebaseClient.Child("babyDiary").PostAsync<DiaryEntry>(diaryEntry);
+            } catch (Exception ex) {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> updateToDatabase(DiaryEntry diaryEntry)
+        {
+            try
+            {
+                var firebaseClient = ((App)Xamarin.Forms.Application.Current).fireBaseClientObj;
+                var toUpdatePerson = (await
+                  firebaseClient.Child("babyDiary")
+                  .OnceAsync<DiaryEntry>()).Where(a => a.Object.Sid == diaryEntry.Sid).FirstOrDefault();
+                await firebaseClient
+                  .Child("babyDiary")
+                  .Child(toUpdatePerson.Key)
+                  .PutAsync<DiaryEntry>(diaryEntry);
+            } catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.ToString()}");
+                return false;
+            }
+            return true;
         }
     }
 }

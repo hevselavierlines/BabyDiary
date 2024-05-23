@@ -1,12 +1,15 @@
 ﻿using BabyDiary.Models;
+using Firebase.Database;
+using Firebase.Database.Query;
 using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-
+using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
@@ -16,8 +19,10 @@ namespace BabyDiary.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DiaryPage : ContentPage
     {
+        
         private List<SwipeView> _swipeViews;
         private ObservableCollection<DiaryEntry> _entries;
+
         public DiaryPage()
         {
             InitializeComponent();
@@ -38,6 +43,41 @@ namespace BabyDiary.Views
                 entriesCV.ItemsSource = _entries;
             }
         }
+
+        
+        public async Task<bool> synchronizeFromOnlineDB(FirebaseClient firebaseClient)
+        {
+            try
+            {
+
+                var diaryList = await
+                    firebaseClient.Child("babyDiary")
+                    .OnceAsync<DiaryEntry>();
+                using (SQLiteConnection connection = new SQLiteConnection(App.DBFolder))
+                {
+                    diaryList.ForEach(diaryEntry =>
+                    {
+                        var updateObject = connection.Table<DiaryEntry>()
+                        .Where(entry => entry.Sid == diaryEntry.Object.Sid).FirstOrDefault();
+                        if(updateObject != null)
+                        {
+                            connection.Update(diaryEntry.Object);
+                        } else
+                        {
+                            connection.Insert(diaryEntry.Object);
+                        }
+                    });
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex}");
+                return false;
+            }
+            return true;
+        }
+        
 
         private void entryDate_DateSelected(object sender, DateChangedEventArgs e)
         {
@@ -65,6 +105,22 @@ namespace BabyDiary.Views
         {
             base.OnAppearing();
             LoadDiaryEntries(entryDate.Date);
+
+            Refresh();
+        }
+
+        private void Refresh()
+        {
+            entriesRefresh.IsRefreshing = true;
+            var firebaseClient = ((App)Application.Current).fireBaseClientObj;
+            Task.Run(async () => {
+                await synchronizeFromOnlineDB(firebaseClient);
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    LoadDiaryEntries(entryDate.Date);
+                });
+            });
+            entriesRefresh.IsRefreshing = false;
         }
 
         private void SwipeItem_Invoked(object sender, EventArgs e)
@@ -76,6 +132,14 @@ namespace BabyDiary.Views
             {
                 connection.CreateTable<DiaryEntry>();
                 connection.Delete(entry);
+                Task.Run(async () =>
+                {
+                    var firebaseClient = ((App)Application.Current).fireBaseClientObj;
+                    var toUpdatePerson = (await
+                          firebaseClient.Child("babyDiary")
+                          .OnceAsync<DiaryEntry>()).Where(a => a.Object.Sid == entry.Sid).FirstOrDefault();
+                    await firebaseClient.Child("babyDiary").Child(toUpdatePerson.Key).DeleteAsync();
+                });
             }
             _entries.Remove(entry);
         }
@@ -111,6 +175,11 @@ namespace BabyDiary.Views
             {
                 item.Open(OpenSwipeItem.LeftItems);
             }
+        }
+
+        private void entriesRefresh_Refreshing(object sender, EventArgs e)
+        {
+            Refresh();
         }
     }
 }

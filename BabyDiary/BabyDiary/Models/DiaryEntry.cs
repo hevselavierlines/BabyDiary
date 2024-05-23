@@ -9,18 +9,23 @@ namespace BabyDiary.Models
 {
     public class DiaryEntry
     {
+        public DiaryEntry()
+        {
+            Sid = Guid.NewGuid().ToString("B").ToUpper();
+        }
         public enum TYPE
         {
             DRINK, DIAPERS, SLEEP
         }
-        [PrimaryKey, AutoIncrement]
-        public long Sid { get; set; }
+        [PrimaryKey]
+        public string Sid { get; set; }
         public int DrinkAmount { get; set; }
         public string PoopInfo { get; set; }
         public TYPE Type { get; set; }
         public string SpecialInfo { get; set; }
         public DateTime EntryTime { get; set; }
         public int SleepTime { get; set; }
+        public DateTime UpdateTime { get; set; }
         public string DayString
         {
             get
